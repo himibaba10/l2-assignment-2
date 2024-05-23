@@ -1,6 +1,26 @@
 import { TProduct } from './product.interface';
 import { Product } from './product.model';
 
+const getProductsFromDB = async (): Promise<TProduct[]> => {
+  try {
+    const result = await Product.find();
+    return result;
+  } catch (error) {
+    throw Error('Could not get products');
+  }
+};
+
+const getProductFromDB = async (
+  productId: string,
+): Promise<TProduct | null> => {
+  try {
+    const result = await Product.findOne({ _id: productId });
+    return result;
+  } catch (error) {
+    throw Error('Could not get the product');
+  }
+};
+
 const insertProductToDB = async (
   productData: TProduct,
 ): Promise<TProduct | undefined> => {
@@ -14,4 +34,8 @@ const insertProductToDB = async (
   }
 };
 
-export const productServices = { insertProductToDB };
+export const productServices = {
+  insertProductToDB,
+  getProductsFromDB,
+  getProductFromDB,
+};
