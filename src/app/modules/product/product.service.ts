@@ -59,10 +59,12 @@ const updateProductInDB = async (
   }
 };
 
-const deleteProductFromDB = async (productId: string): Promise<any> => {
+const deleteProductFromDB = async (
+  productId: string,
+): Promise<{ success: boolean }> => {
   try {
-    const result = await Product.deleteOne({ _id: productId });
-    return result;
+    await Product.deleteOne({ _id: productId });
+    return { success: true };
   } catch (error) {
     throw Error('Product could not be deleted');
   }

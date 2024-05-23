@@ -5,7 +5,7 @@ const getOrdersFromDB = async (
   email: string | undefined,
 ): Promise<TOrder[]> => {
   try {
-    let query: { email?: string } = {};
+    const query: { email?: string } = {};
 
     if (email) {
       query.email = email;

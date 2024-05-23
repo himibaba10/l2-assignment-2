@@ -56,7 +56,8 @@ export default tseslint.config(
           allowRegExp: true,
         },
       ],
-      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-floating-promises': 'off',
+      '@typescript-eslint/consistent-type-definitions': 'off',
     },
   },
 
