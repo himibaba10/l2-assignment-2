@@ -2,17 +2,21 @@ import { Request, Response } from 'express';
 import { productServices } from './product.service';
 import productValidationSchema from './product.validation';
 
-const GetProducts = async (
+const getProducts = async (
   req: Request,
   res: Response,
 ): Promise<void | undefined> => {
   try {
+    const { searchTerm } = req.query;
+
     //   Get the result from product service
-    const result = await productServices.getProductsFromDB();
+    const result = await productServices.getProductsFromDB(
+      searchTerm as string,
+    );
 
     res.status(200).json({
       success: true,
-      message: 'Products fetched successfully',
+      message: 'Products fetched successfully!',
       data: result,
     });
   } catch (error) {
@@ -24,7 +28,7 @@ const GetProducts = async (
   }
 };
 
-const GetProduct = async (
+const getProduct = async (
   req: Request,
   res: Response,
 ): Promise<void | undefined> => {
@@ -44,7 +48,7 @@ const GetProduct = async (
 
     res.status(200).json({
       success: true,
-      message: 'Product fetched successfully',
+      message: 'Product fetched successfully!',
       data: result,
     });
   } catch (error) {
@@ -56,7 +60,7 @@ const GetProduct = async (
   }
 };
 
-const AddProduct = async (
+const addProduct = async (
   req: Request,
   res: Response,
 ): Promise<void | undefined> => {
@@ -78,7 +82,7 @@ const AddProduct = async (
 
     res.status(200).json({
       success: true,
-      message: 'Product inserted successfully',
+      message: 'Product created successfully!',
       data: result,
     });
   } catch (error) {
@@ -90,8 +94,68 @@ const AddProduct = async (
   }
 };
 
+const updateProduct = async (
+  req: Request,
+  res: Response,
+): Promise<void | undefined> => {
+  try {
+    const { productId } = req.params;
+    const { product } = req.body;
+
+    const { error, value } = productValidationSchema.validate(product);
+
+    if (error) {
+      res
+        .status(500)
+        .json({ success: false, error: 'Product data is not valid' });
+      return;
+    }
+
+    //   Get the result from product service
+    const result = await productServices.updateProductInDB(productId, value);
+
+    res.status(200).json({
+      success: true,
+      message: 'Product updated successfully!',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: true,
+      message: 'Could not update product',
+      error,
+    });
+  }
+};
+
+const deleteProduct = async (
+  req: Request,
+  res: Response,
+): Promise<void | undefined> => {
+  try {
+    const { productId } = req.params;
+    const result = await productServices.deleteProductFromDB(productId);
+
+    console.log(result);
+
+    res.status(200).json({
+      success: true,
+      message: 'Product deleted successfully!',
+      data: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Could not delete product',
+      error,
+    });
+  }
+};
+
 export const productControllers = {
-  AddProduct,
-  GetProducts,
-  GetProduct,
+  addProduct,
+  getProducts,
+  getProduct,
+  updateProduct,
+  deleteProduct,
 };
