@@ -65,9 +65,7 @@ const addProduct = async (
   res: Response,
 ): Promise<void | undefined> => {
   try {
-    const { product } = req.body;
-
-    const { error, value } = productValidationSchema.validate(product);
+    const { error, value } = productValidationSchema.validate(req.body);
 
     // If product data is not valid
     if (error) {
@@ -100,9 +98,8 @@ const updateProduct = async (
 ): Promise<void | undefined> => {
   try {
     const { productId } = req.params;
-    const { product } = req.body;
 
-    const { error, value } = productValidationSchema.validate(product);
+    const { error, value } = productValidationSchema.validate(req.body);
 
     if (error) {
       res
